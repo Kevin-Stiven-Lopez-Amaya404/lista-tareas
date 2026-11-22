@@ -8,4 +8,4 @@
 
 Commits con el número de la HU: `HU-01: descripción`.
 
-Tablero del proyecto: [`docs/index.html`](docs/index.html)
+Tablero del proyecto: https://kevin-stiven-lopez-amaya404.github.io/docs-lista-tareas/ ([repo](https://github.com/Kevin-Stiven-Lopez-Amaya404/docs-lista-tareas))
