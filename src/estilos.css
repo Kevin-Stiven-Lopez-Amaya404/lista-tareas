@@ -1,0 +1,259 @@
+/* Tokens: mismos nombres que la colección "Tokens" de Figma (color/fondo -> --color-fondo) */
+:root {
+  --color-fondo: #f5f6f8;
+  --color-superficie: #ffffff;
+  --color-texto: #1b2230;
+  --color-texto-secundario: #5d6778;
+  --color-borde: #dde1e8;
+  --color-primario: #2754c5;
+  --color-sobre-primario: #ffffff;
+  --color-peligro: #c2410c;
+  --espacio-4: 4px;
+  --espacio-8: 8px;
+  --espacio-12: 12px;
+  --espacio-16: 16px;
+  --espacio-24: 24px;
+  --radio-6: 6px;
+  --radio-12: 12px;
+  --fuente: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente);
+}
+
+/* shortcut: ancho máximo del diseño móvil (390px); ajustar cuando exista el diseño de escritorio */
+.app {
+  max-width: 390px;
+  margin: 0 auto;
+  padding: var(--espacio-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-24);
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.resumen {
+  margin: 0;
+  font-size: 14px;
+  line-height: normal;
+  color: var(--color-texto-secundario);
+}
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-8);
+  padding-block: 48px;
+  text-align: center;
+}
+
+.estado-vacio p { margin: 0; line-height: normal; }
+
+.estado-vacio-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-texto);
+}
+
+.estado-vacio-ayuda {
+  font-size: 14px;
+  color: var(--color-texto-secundario);
+}
+
+[hidden] { display: none !important; }
+
+.nueva-tarea {
+  display: flex;
+  gap: var(--espacio-8);
+  align-items: center;
+}
+
+.nueva-tarea input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 16px;
+  line-height: normal;
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-12);
+  padding: var(--espacio-12) var(--espacio-16);
+}
+
+.nueva-tarea input::placeholder { color: var(--color-texto-secundario); }
+
+.nueva-tarea input:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 1px;
+}
+
+.boton {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  border: 0;
+  border-radius: var(--radio-12);
+  padding: var(--espacio-12) var(--espacio-16);
+  cursor: pointer;
+}
+
+.boton-primario {
+  background: var(--color-primario);
+  color: var(--color-sobre-primario);
+}
+
+/* borde interior: en Figma el trazo no suma al tamaño, así ambos botones miden lo mismo */
+.boton-secundario {
+  background: transparent;
+  color: var(--color-texto);
+  box-shadow: inset 0 0 0 1px var(--color-borde);
+}
+
+.boton:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.boton-icono {
+  flex-shrink: 0;
+  display: inline-flex;
+  padding: var(--espacio-4);
+  border: 0;
+  border-radius: var(--radio-6);
+  background: transparent;
+  cursor: pointer;
+}
+
+.boton-icono img { display: block; }
+
+.boton-icono:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 1px;
+}
+
+.boton:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.tarea {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-12);
+  padding: var(--espacio-12) var(--espacio-16);
+  font-size: 16px;
+  line-height: normal;
+  overflow-wrap: anywhere;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+}
+
+.tarea-cuerpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  cursor: pointer;
+}
+
+.tarea-check {
+  appearance: none;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid var(--color-texto-secundario);
+  border-radius: var(--radio-6);
+  background: transparent center / 14px 14px no-repeat;
+  cursor: pointer;
+}
+
+.tarea-check:checked {
+  border-color: var(--color-primario);
+  background-color: var(--color-primario);
+  background-image: url("./assets/icon-check.svg");
+}
+
+.tarea-check:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.tarea.editando {
+  border: 2px solid var(--color-primario);
+}
+
+.tarea-edicion {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.tarea-edicion-campo {
+  width: 100%;
+  font: inherit;
+  font-size: 16px;
+  line-height: normal;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  border: 0;
+  border-radius: var(--radio-6);
+  padding: var(--espacio-8) var(--espacio-12);
+}
+
+.tarea-edicion-campo:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 1px;
+}
+
+.tarea-edicion-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--espacio-8);
+}
+
+.completada .tarea-texto {
+  color: var(--color-texto-secundario);
+  text-decoration: line-through;
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
