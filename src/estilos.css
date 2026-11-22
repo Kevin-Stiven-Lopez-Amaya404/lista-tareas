@@ -44,6 +44,43 @@ body {
   line-height: normal;
 }
 
+.encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.resumen {
+  margin: 0;
+  font-size: 14px;
+  line-height: normal;
+  color: var(--color-texto-secundario);
+}
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-8);
+  padding-block: 48px;
+  text-align: center;
+}
+
+.estado-vacio p { margin: 0; line-height: normal; }
+
+.estado-vacio-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-texto);
+}
+
+.estado-vacio-ayuda {
+  font-size: 14px;
+  color: var(--color-texto-secundario);
+}
+
+[hidden] { display: none !important; }
+
 .nueva-tarea {
   display: flex;
   gap: var(--espacio-8);

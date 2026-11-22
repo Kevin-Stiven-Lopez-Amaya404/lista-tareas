@@ -1,5 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea } from './tareas.js';
+import { agregarTarea, resumen } from './tareas.js';
+
+describe('resumen (HU-02)', () => {
+  const t = (completada) => ({ id: 'x', texto: 'x', completada });
+
+  it('sin tareas muestra el texto del estado vacío', () => {
+    expect(resumen([])).toBe('Sin tareas todavía');
+  });
+
+  it('cuenta pendientes y completadas con plural', () => {
+    expect(resumen([t(false), t(false), t(false), t(true)])).toBe('3 pendientes · 1 completada');
+  });
+
+  it('usa singular y cero correctamente', () => {
+    expect(resumen([t(false)])).toBe('1 pendiente · 0 completadas');
+    expect(resumen([t(true), t(true)])).toBe('0 pendientes · 2 completadas');
+  });
+});
 
 describe('agregarTarea (HU-01)', () => {
   it('agrega una tarea pendiente al final de la lista', () => {

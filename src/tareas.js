@@ -5,3 +5,11 @@ export function agregarTarea(tareas, texto) {
   if (!limpio) return tareas;
   return [...tareas, { id: crypto.randomUUID(), texto: limpio, completada: false }];
 }
+
+const plural = (n, palabra) => `${n} ${palabra}${n === 1 ? '' : 's'}`;
+
+export function resumen(tareas) {
+  if (tareas.length === 0) return 'Sin tareas todavía';
+  const completadas = tareas.filter((t) => t.completada).length;
+  return `${plural(tareas.length - completadas, 'pendiente')} · ${plural(completadas, 'completada')}`;
+}

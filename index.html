@@ -12,6 +12,7 @@
     <main class="app">
       <header class="encabezado">
         <h1>Mis tareas</h1>
+        <p id="resumen" class="resumen" aria-live="polite"></p>
       </header>
 
       <form id="form-tarea" class="nueva-tarea">
@@ -21,6 +22,11 @@
       </form>
 
       <ul id="lista-tareas" class="lista" aria-label="Tareas"></ul>
+
+      <div id="estado-vacio" class="estado-vacio">
+        <p class="estado-vacio-titulo">Aún no tienes tareas</p>
+        <p class="estado-vacio-ayuda">Escribe tu primera tarea arriba y pulsa Agregar.</p>
+      </div>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>
