@@ -1,5 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, resumen } from './tareas.js';
+import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, filtrarTareas, resumen } from './tareas.js';
+
+describe('filtrarTareas (HU-09)', () => {
+  const base = [
+    { id: 'a', texto: 'Uno', completada: false },
+    { id: 'b', texto: 'Dos', completada: true },
+    { id: 'c', texto: 'Tres', completada: false },
+  ];
+  const ids = (lista) => lista.map((t) => t.id);
+
+  it('todas devuelve la lista completa en orden', () => {
+    expect(ids(filtrarTareas(base, 'todas'))).toEqual(['a', 'b', 'c']);
+  });
+
+  it('pendientes y completadas separan por estado manteniendo el orden', () => {
+    expect(ids(filtrarTareas(base, 'pendientes'))).toEqual(['a', 'c']);
+    expect(ids(filtrarTareas(base, 'completadas'))).toEqual(['b']);
+  });
+
+  it('un filtro desconocido no oculta tareas', () => {
+    expect(ids(filtrarTareas(base, 'otro'))).toEqual(['a', 'b', 'c']);
+  });
+
+  it('el resumen sigue contando todas las tareas', () => {
+    expect(resumen(base)).toBe('2 pendientes · 1 completada');
+  });
+});
 
 describe('eliminarTarea (HU-05)', () => {
   const base = [

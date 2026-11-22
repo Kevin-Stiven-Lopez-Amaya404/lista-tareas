@@ -1,7 +1,7 @@
 import './estilos.css';
 import iconoEditar from './assets/icon-editar.svg';
 import iconoEliminar from './assets/icon-eliminar.svg';
-import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, resumen } from './tareas.js';
+import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, filtrarTareas, resumen } from './tareas.js';
 import { cargarTareas, guardarTareas } from './almacenamiento.js';
 
 let tareas = cargarTareas();
@@ -12,6 +12,12 @@ function actualizar(nuevas) {
   guardarTareas(tareas);
 }
 let editandoId = null; // solo una tarea en edición a la vez
+let filtro = 'todas';
+
+const MENSAJE_SIN_RESULTADOS = {
+  pendientes: 'No hay tareas pendientes.',
+  completadas: 'No hay tareas completadas.',
+};
 
 const form = document.querySelector('#form-tarea');
 const input = document.querySelector('#nueva-tarea');
@@ -19,6 +25,8 @@ const boton = form.querySelector('button[type="submit"]');
 const lista = document.querySelector('#lista-tareas');
 const textoResumen = document.querySelector('#resumen');
 const estadoVacio = document.querySelector('#estado-vacio');
+const filtros = document.querySelector('#filtros');
+const sinResultados = document.querySelector('#sin-resultados');
 
 function actualizarBoton() {
   boton.disabled = input.value.trim() === '';
@@ -90,12 +98,32 @@ function crearBotonIcono(clase, src, etiqueta) {
   return boton;
 }
 
+const visibles = () => filtrarTareas(tareas, filtro);
+
 function render() {
+  const mostradas = visibles();
   textoResumen.textContent = resumen(tareas);
   estadoVacio.hidden = tareas.length > 0;
-  lista.hidden = tareas.length === 0;
-  lista.replaceChildren(...tareas.map(crearItem));
+  filtros.hidden = tareas.length === 0;
+  for (const b of filtros.querySelectorAll('.filtro')) {
+    b.setAttribute('aria-pressed', String(b.dataset.filtro === filtro));
+  }
+  lista.hidden = mostradas.length === 0;
+  sinResultados.hidden = tareas.length === 0 || mostradas.length > 0;
+  sinResultados.textContent = MENSAJE_SIN_RESULTADOS[filtro] ?? '';
+  lista.replaceChildren(...mostradas.map(crearItem));
 }
+
+// tras un cambio que puede sacar la tarea de la vista: foco a la que ocupa su lugar, la anterior o `alternativa`
+function enfocarCerca(id, posicion, selector, alternativa) {
+  const ahora = visibles();
+  if (ahora.some((t) => t.id === id)) return enfocar(id, selector);
+  const cercana = ahora[posicion] ?? ahora[posicion - 1];
+  if (cercana) enfocar(cercana.id, selector);
+  else alternativa.focus();
+}
+
+const filtroActivo = () => filtros.querySelector('[aria-pressed="true"]');
 
 // render() recrea la lista: con esto el foco vuelve al mismo control para el uso con teclado
 function enfocar(id, selector) {
@@ -111,9 +139,10 @@ function terminarEdicion(id) {
 lista.addEventListener('change', (evento) => {
   if (!evento.target.matches('.tarea-check')) return;
   const id = evento.target.closest('.tarea').dataset.id;
+  const posicion = visibles().findIndex((t) => t.id === id);
   actualizar(alternarCompletada(tareas, id));
   render();
-  enfocar(id, '.tarea-check');
+  enfocarCerca(id, posicion, '.tarea-check', filtroActivo());
 });
 
 lista.addEventListener('click', (evento) => {
@@ -133,14 +162,19 @@ lista.addEventListener('click', (evento) => {
 });
 
 function eliminar(id) {
-  const posicion = tareas.findIndex((t) => t.id === id);
+  const posicion = visibles().findIndex((t) => t.id === id);
   actualizar(eliminarTarea(tareas, id));
   render();
-  // el foco no se pierde: pasa a la tarea que ocupa su lugar, a la anterior o al campo de nueva tarea
-  const siguiente = tareas[posicion] ?? tareas[posicion - 1];
-  if (siguiente) enfocar(siguiente.id, '.tarea-eliminar');
-  else input.focus();
+  // el foco no se pierde: a la tarea que ocupa su lugar, a la anterior, al filtro activo o al campo nuevo
+  enfocarCerca(id, posicion, '.tarea-eliminar', tareas.length > 0 ? filtroActivo() : input);
 }
+
+filtros.addEventListener('click', (evento) => {
+  const opcion = evento.target.closest('.filtro');
+  if (!opcion) return;
+  filtro = opcion.dataset.filtro;
+  render();
+});
 
 lista.addEventListener('input', (evento) => {
   if (!evento.target.matches('.tarea-edicion-campo')) return;
@@ -165,6 +199,7 @@ input.addEventListener('input', actualizarBoton);
 form.addEventListener('submit', (evento) => {
   evento.preventDefault();
   actualizar(agregarTarea(tareas, input.value));
+  if (filtro === 'completadas') filtro = 'todas'; // la nueva es pendiente: que se vea
   input.value = '';
   actualizarBoton();
   input.focus();
