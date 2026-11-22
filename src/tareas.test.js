@@ -1,5 +1,32 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea, alternarCompletada, resumen } from './tareas.js';
+import { agregarTarea, alternarCompletada, editarTarea, resumen } from './tareas.js';
+
+describe('editarTarea (HU-04)', () => {
+  const base = [
+    { id: 'a', texto: 'Comprar leche', completada: true },
+    { id: 'b', texto: 'Estudiar', completada: false },
+  ];
+
+  it('cambia el texto de la tarea indicada, sin espacios sobrantes', () => {
+    const lista = editarTarea(base, 'b', '  Estudiar para el parcial ');
+    expect(lista[1].texto).toBe('Estudiar para el parcial');
+    expect(lista[0]).toBe(base[0]);
+  });
+
+  it('conserva el estado completada', () => {
+    expect(editarTarea(base, 'a', 'Comprar pan')[0]).toMatchObject({ texto: 'Comprar pan', completada: true });
+  });
+
+  it('ignora texto vacío o solo con espacios', () => {
+    expect(editarTarea(base, 'a', '')).toBe(base);
+    expect(editarTarea(base, 'a', '   ')).toBe(base);
+  });
+
+  it('no modifica la lista original', () => {
+    editarTarea(base, 'b', 'Otro');
+    expect(base[1].texto).toBe('Estudiar');
+  });
+});
 
 describe('alternarCompletada (HU-03)', () => {
   const base = [
