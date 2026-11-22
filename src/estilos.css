@@ -147,6 +147,46 @@ body {
   font-size: 16px;
   line-height: normal;
   overflow-wrap: anywhere;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+}
+
+.tarea-cuerpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-12);
+  cursor: pointer;
+}
+
+.tarea-check {
+  appearance: none;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid var(--color-texto-secundario);
+  border-radius: var(--radio-6);
+  background: transparent center / 14px 14px no-repeat;
+  cursor: pointer;
+}
+
+.tarea-check:checked {
+  border-color: var(--color-primario);
+  background-color: var(--color-primario);
+  background-image: url("./assets/icon-check.svg");
+}
+
+.tarea-check:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.completada .tarea-texto {
+  color: var(--color-texto-secundario);
+  text-decoration: line-through;
 }
 
 .visualmente-oculto {
