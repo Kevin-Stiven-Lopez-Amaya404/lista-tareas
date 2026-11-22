@@ -1,5 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea, resumen } from './tareas.js';
+import { agregarTarea, alternarCompletada, resumen } from './tareas.js';
+
+describe('alternarCompletada (HU-03)', () => {
+  const base = [
+    { id: 'a', texto: 'Uno', completada: false },
+    { id: 'b', texto: 'Dos', completada: false },
+  ];
+
+  it('marca como completada solo la tarea indicada', () => {
+    const lista = alternarCompletada(base, 'b');
+    expect(lista.map((t) => t.completada)).toEqual([false, true]);
+  });
+
+  it('al alternar de nuevo vuelve a pendiente', () => {
+    expect(alternarCompletada(alternarCompletada(base, 'a'), 'a')[0].completada).toBe(false);
+  });
+
+  it('no modifica la lista original', () => {
+    alternarCompletada(base, 'a');
+    expect(base[0].completada).toBe(false);
+  });
+
+  it('actualiza el resumen', () => {
+    expect(resumen(alternarCompletada(base, 'a'))).toBe('1 pendiente · 1 completada');
+  });
+});
 
 describe('resumen (HU-02)', () => {
   const t = (completada) => ({ id: 'x', texto: 'x', completada });

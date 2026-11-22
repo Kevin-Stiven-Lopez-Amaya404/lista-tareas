@@ -6,6 +6,10 @@ export function agregarTarea(tareas, texto) {
   return [...tareas, { id: crypto.randomUUID(), texto: limpio, completada: false }];
 }
 
+export function alternarCompletada(tareas, id) {
+  return tareas.map((t) => (t.id === id ? { ...t, completada: !t.completada } : t));
+}
+
 const plural = (n, palabra) => `${n} ${palabra}${n === 1 ? '' : 's'}`;
 
 export function resumen(tareas) {
