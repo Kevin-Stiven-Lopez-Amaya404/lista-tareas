@@ -1,0 +1,4 @@
+# Finales de línea LF para todos, sin depender de core.autocrlf de cada equipo
+* text=auto eol=lf
+*.png binary
+*.jpg binary
