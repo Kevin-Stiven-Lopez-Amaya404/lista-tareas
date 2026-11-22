@@ -8,6 +8,9 @@
   --color-primario: #2754c5;
   --color-sobre-primario: #ffffff;
   --color-peligro: #c2410c;
+  --color-primario-hover: #1f45a6;
+  /* estilo "Foco/Anillo" de Figma: 2px superficie + 2px primario */
+  --anillo-foco: 0 0 0 2px var(--color-superficie), 0 0 0 4px var(--color-primario);
   --espacio-4: 4px;
   --espacio-8: 8px;
   --espacio-12: 12px;
@@ -103,11 +106,6 @@ body {
 
 .nueva-tarea input::placeholder { color: var(--color-texto-secundario); }
 
-.nueva-tarea input:focus-visible {
-  outline: 2px solid var(--color-primario);
-  outline-offset: 1px;
-}
-
 .boton {
   font: inherit;
   font-size: 16px;
@@ -144,16 +142,6 @@ body {
 }
 
 .boton-icono img { display: block; }
-
-.boton-icono:focus-visible {
-  outline: 2px solid var(--color-primario);
-  outline-offset: 1px;
-}
-
-.boton:focus-visible {
-  outline: 2px solid var(--color-primario);
-  outline-offset: 2px;
-}
 
 .lista {
   list-style: none;
@@ -204,11 +192,6 @@ body {
   background-image: url("./assets/icon-check.svg");
 }
 
-.tarea-check:focus-visible {
-  outline: 2px solid var(--color-primario);
-  outline-offset: 2px;
-}
-
 .tarea.editando {
   border: 2px solid var(--color-primario);
 }
@@ -231,11 +214,6 @@ body {
   border: 0;
   border-radius: var(--radio-6);
   padding: var(--espacio-8) var(--espacio-12);
-}
-
-.tarea-edicion-campo:focus-visible {
-  outline: 2px solid var(--color-primario);
-  outline-offset: 1px;
 }
 
 .tarea-edicion-acciones {
@@ -268,4 +246,23 @@ body {
 
   .encabezado h1 { font-size: 36px; }
   .resumen { font-size: 16px; }
+}
+
+/* HU-08: foco y hover (tablero "Estados de interacción" en Figma) */
+:where(input, button):focus-visible {
+  /* contorno transparente: no se ve normalmente, pero el modo de alto contraste de Windows lo pinta */
+  outline: 2px solid transparent;
+  box-shadow: var(--anillo-foco);
+}
+
+.boton-secundario:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--color-borde), var(--anillo-foco);
+}
+
+/* solo con mouse: en pantallas táctiles el hover se quedaría "pegado" tras tocar */
+@media (hover: hover) {
+  .boton-primario:hover:not(:disabled) { background: var(--color-primario-hover); }
+  .boton-secundario:hover { background: var(--color-fondo); }
+  .boton-icono:hover { background: var(--color-fondo); }
+  .tarea-check:hover:not(:checked) { border-color: var(--color-primario); }
 }
