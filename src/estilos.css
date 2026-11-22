@@ -237,9 +237,26 @@ body {
   white-space: nowrap;
 }
 
+/* HU-09 y HU-10: barra con filtros y "Borrar completadas"; en celular el botón baja si no cabe */
+.barra-lista {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-8);
+}
+
+/* pendiente de agregar en Figma (límite del conector): mismo tamaño de texto que los filtros, color peligro */
+.boton-texto-peligro {
+  font-size: 14px;
+  padding: var(--espacio-8) var(--espacio-12);
+  border-radius: var(--radio-6);
+  background: transparent;
+  color: var(--color-peligro);
+}
+
 /* HU-09: filtros (componente "Filtros" de Figma) */
 .filtros {
-  align-self: flex-start;
   display: flex;
   gap: var(--espacio-4);
   padding: var(--espacio-4);
@@ -303,4 +320,6 @@ body {
   .boton-icono:hover { background: var(--color-fondo); }
   .tarea-check:hover:not(:checked) { border-color: var(--color-primario); }
   .filtro[aria-pressed="false"]:hover { background: var(--color-fondo); }
+  /* va sobre el fondo de la página: el hover usa superficie para que se note */
+  .boton-texto-peligro:hover { background: var(--color-superficie); }
 }

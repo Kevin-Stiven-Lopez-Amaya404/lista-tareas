@@ -1,5 +1,40 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, filtrarTareas, resumen } from './tareas.js';
+import {
+  agregarTarea,
+  alternarCompletada,
+  borrarCompletadas,
+  editarTarea,
+  eliminarTarea,
+  filtrarTareas,
+  resumen,
+} from './tareas.js';
+
+describe('borrarCompletadas (HU-10)', () => {
+  const base = [
+    { id: 'a', texto: 'Uno', completada: true },
+    { id: 'b', texto: 'Dos', completada: false },
+    { id: 'c', texto: 'Tres', completada: true },
+    { id: 'd', texto: 'Cuatro', completada: false },
+  ];
+
+  it('quita todas las completadas y deja las pendientes en su orden', () => {
+    expect(borrarCompletadas(base).map((t) => t.id)).toEqual(['b', 'd']);
+  });
+
+  it('sin completadas devuelve las mismas tareas', () => {
+    const pendientes = borrarCompletadas(base);
+    expect(borrarCompletadas(pendientes)).toEqual(pendientes);
+  });
+
+  it('si todas estaban completadas queda vacía', () => {
+    expect(resumen(borrarCompletadas([base[0], base[2]]))).toBe('Sin tareas todavía');
+  });
+
+  it('no modifica la lista original', () => {
+    borrarCompletadas(base);
+    expect(base).toHaveLength(4);
+  });
+});
 
 describe('filtrarTareas (HU-09)', () => {
   const base = [
