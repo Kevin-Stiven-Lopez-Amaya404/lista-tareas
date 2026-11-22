@@ -13,6 +13,7 @@
   --espacio-12: 12px;
   --espacio-16: 16px;
   --espacio-24: 24px;
+  --espacio-64: 64px;
   --radio-6: 6px;
   --radio-12: 12px;
   --fuente: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -27,7 +28,7 @@ body {
   font-family: var(--fuente);
 }
 
-/* shortcut: ancho máximo del diseño móvil (390px); ajustar cuando exista el diseño de escritorio */
+/* Celular: diseño "Principal" (390px). Escritorio (>= 768px): diseño "Escritorio", columna de 640px. */
 .app {
   max-width: 390px;
   margin: 0 auto;
@@ -256,4 +257,15 @@ body {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* Escritorio (HU-07, diseño "Escritorio" en Figma). Va al final para tener prioridad sobre las reglas de celular. */
+@media (min-width: 768px) {
+  .app {
+    max-width: calc(640px + 2 * var(--espacio-24));
+    padding-block: var(--espacio-64);
+  }
+
+  .encabezado h1 { font-size: 36px; }
+  .resumen { font-size: 16px; }
 }
