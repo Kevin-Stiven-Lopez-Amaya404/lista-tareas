@@ -20,6 +20,10 @@ export function eliminarTarea(tareas, id) {
   return tareas.filter((t) => t.id !== id);
 }
 
+export function borrarCompletadas(tareas) {
+  return tareas.filter((t) => !t.completada);
+}
+
 // filtro desconocido = todas, para que un valor inesperado nunca oculte tareas
 export function filtrarTareas(tareas, filtro) {
   if (filtro === 'pendientes') return tareas.filter((t) => !t.completada);

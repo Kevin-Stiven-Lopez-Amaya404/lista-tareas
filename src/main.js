@@ -1,7 +1,15 @@
 import './estilos.css';
 import iconoEditar from './assets/icon-editar.svg';
 import iconoEliminar from './assets/icon-eliminar.svg';
-import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, filtrarTareas, resumen } from './tareas.js';
+import {
+  agregarTarea,
+  alternarCompletada,
+  borrarCompletadas,
+  editarTarea,
+  eliminarTarea,
+  filtrarTareas,
+  resumen,
+} from './tareas.js';
 import { cargarTareas, guardarTareas } from './almacenamiento.js';
 
 let tareas = cargarTareas();
@@ -25,7 +33,9 @@ const boton = form.querySelector('button[type="submit"]');
 const lista = document.querySelector('#lista-tareas');
 const textoResumen = document.querySelector('#resumen');
 const estadoVacio = document.querySelector('#estado-vacio');
+const barraLista = document.querySelector('#barra-lista');
 const filtros = document.querySelector('#filtros');
+const botonBorrarCompletadas = document.querySelector('#borrar-completadas');
 const sinResultados = document.querySelector('#sin-resultados');
 
 function actualizarBoton() {
@@ -104,7 +114,10 @@ function render() {
   const mostradas = visibles();
   textoResumen.textContent = resumen(tareas);
   estadoVacio.hidden = tareas.length > 0;
-  filtros.hidden = tareas.length === 0;
+  barraLista.hidden = tareas.length === 0;
+  const completadas = tareas.filter((t) => t.completada).length;
+  botonBorrarCompletadas.hidden = completadas === 0;
+  botonBorrarCompletadas.textContent = `Borrar completadas (${completadas})`;
   for (const b of filtros.querySelectorAll('.filtro')) {
     b.setAttribute('aria-pressed', String(b.dataset.filtro === filtro));
   }
@@ -168,6 +181,13 @@ function eliminar(id) {
   // el foco no se pierde: a la tarea que ocupa su lugar, a la anterior, al filtro activo o al campo nuevo
   enfocarCerca(id, posicion, '.tarea-eliminar', tareas.length > 0 ? filtroActivo() : input);
 }
+
+botonBorrarCompletadas.addEventListener('click', () => {
+  actualizar(borrarCompletadas(tareas));
+  render();
+  // el botón desaparece: el foco va al filtro activo o, si no quedan tareas, al campo de nueva tarea
+  (tareas.length > 0 ? filtroActivo() : input).focus();
+});
 
 filtros.addEventListener('click', (evento) => {
   const opcion = evento.target.closest('.filtro');
