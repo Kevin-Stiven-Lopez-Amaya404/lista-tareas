@@ -2,8 +2,15 @@ import './estilos.css';
 import iconoEditar from './assets/icon-editar.svg';
 import iconoEliminar from './assets/icon-eliminar.svg';
 import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, resumen } from './tareas.js';
+import { cargarTareas, guardarTareas } from './almacenamiento.js';
 
-let tareas = [];
+let tareas = cargarTareas();
+
+// único punto donde cambia la lista: así cada cambio queda guardado
+function actualizar(nuevas) {
+  tareas = nuevas;
+  guardarTareas(tareas);
+}
 let editandoId = null; // solo una tarea en edición a la vez
 
 const form = document.querySelector('#form-tarea');
@@ -104,7 +111,7 @@ function terminarEdicion(id) {
 lista.addEventListener('change', (evento) => {
   if (!evento.target.matches('.tarea-check')) return;
   const id = evento.target.closest('.tarea').dataset.id;
-  tareas = alternarCompletada(tareas, id);
+  actualizar(alternarCompletada(tareas, id));
   render();
   enfocar(id, '.tarea-check');
 });
@@ -127,7 +134,7 @@ lista.addEventListener('click', (evento) => {
 
 function eliminar(id) {
   const posicion = tareas.findIndex((t) => t.id === id);
-  tareas = eliminarTarea(tareas, id);
+  actualizar(eliminarTarea(tareas, id));
   render();
   // el foco no se pierde: pasa a la tarea que ocupa su lugar, a la anterior o al campo de nueva tarea
   const siguiente = tareas[posicion] ?? tareas[posicion - 1];
@@ -149,7 +156,7 @@ lista.addEventListener('keydown', (evento) => {
 lista.addEventListener('submit', (evento) => {
   evento.preventDefault();
   const id = evento.target.closest('.tarea').dataset.id;
-  tareas = editarTarea(tareas, id, evento.target.querySelector('.tarea-edicion-campo').value);
+  actualizar(editarTarea(tareas, id, evento.target.querySelector('.tarea-edicion-campo').value));
   terminarEdicion(id);
 });
 
@@ -157,7 +164,7 @@ input.addEventListener('input', actualizarBoton);
 
 form.addEventListener('submit', (evento) => {
   evento.preventDefault();
-  tareas = agregarTarea(tareas, input.value);
+  actualizar(agregarTarea(tareas, input.value));
   input.value = '';
   actualizarBoton();
   input.focus();
