@@ -1,5 +1,5 @@
 import './estilos.css';
-import { agregarTarea } from './tareas.js';
+import { agregarTarea, resumen } from './tareas.js';
 
 let tareas = [];
 
@@ -7,12 +7,17 @@ const form = document.querySelector('#form-tarea');
 const input = document.querySelector('#nueva-tarea');
 const boton = form.querySelector('button[type="submit"]');
 const lista = document.querySelector('#lista-tareas');
+const textoResumen = document.querySelector('#resumen');
+const estadoVacio = document.querySelector('#estado-vacio');
 
 function actualizarBoton() {
   boton.disabled = input.value.trim() === '';
 }
 
 function render() {
+  textoResumen.textContent = resumen(tareas);
+  estadoVacio.hidden = tareas.length > 0;
+  lista.hidden = tareas.length === 0;
   lista.replaceChildren(
     ...tareas.map((tarea) => {
       const li = document.createElement('li');
@@ -35,3 +40,4 @@ form.addEventListener('submit', (evento) => {
 });
 
 actualizarBoton();
+render();
