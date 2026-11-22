@@ -2,7 +2,7 @@
 
 App web para anotar tareas: crearlas, marcarlas como completadas, editarlas y eliminarlas. Se guardan en el navegador, así que siguen ahí al volver. Funciona en celular y escritorio, con mouse y con teclado.
 
-**App publicada:** https://kevin-stiven-lopez-amaya404.github.io/lista-tareas/
+**App publicada:** en Vercel (dirección pendiente de conectar el proyecto). Hasta entonces sigue la versión anterior en https://kevin-stiven-lopez-amaya404.github.io/lista-tareas/
 
 Versión actual: ver [Releases](https://github.com/Kevin-Stiven-Lopez-Amaya404/lista-tareas/releases) · [Historial de entregas](https://github.com/Kevin-Stiven-Lopez-Amaya404/docs-lista-tareas/blob/main/CHANGELOG.md) · [Diseño en Figma](https://www.figma.com/design/Gx9t5vMuidiEKMKpi1lfhV)
 
@@ -42,6 +42,11 @@ Commits con el número de la HU: `HU-04: descripción`. Cada PR usa la plantilla
 
 **Entregas:** PR `dev → main` "Release: vX.Y.Z", etiqueta `vX.Y.Z` y Release en GitHub, y `dev` se pone al día con `main`. La documentación se entrega a la vez.
 
-**Despliegue:** automático. Cada push a `main` ejecuta `.github/workflows/deploy.yml`, que instala, prueba, construye y publica `dist/` en GitHub Pages. Si las pruebas fallan, no se publica.
+**Despliegue: Vercel**, conectado al repositorio de GitHub.
+
+- **Producción:** cada merge a `main` (una entrega) se publica en la dirección de producción.
+- **Vistas previas:** cada PR y cada push a otras ramas (`dev`, `huN`) genera una dirección de prueba propia, que Vercel deja como comentario en el PR.
+- **`vercel.json`:** build `npm run build` hacia `dist/`, cabeceras de seguridad (CSP que solo permite Google Fonts como origen externo, `nosniff`, `X-Frame-Options`, HSTS…) y caché larga para `/assets/` (los nombres llevan hash).
+- **Antes de unir:** el CI de GitHub Actions (`ci.yml`) prueba cada PR.
 
 Tablero del proyecto: https://kevin-stiven-lopez-amaya404.github.io/docs-lista-tareas/ ([repo](https://github.com/Kevin-Stiven-Lopez-Amaya404/docs-lista-tareas))
