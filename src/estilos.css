@@ -237,6 +237,60 @@ body {
   white-space: nowrap;
 }
 
+/* HU-09 y HU-10: barra con filtros y "Borrar completadas"; en celular el botón baja si no cabe */
+.barra-lista {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-8);
+}
+
+/* pendiente de agregar en Figma (límite del conector): mismo tamaño de texto que los filtros, color peligro */
+.boton-texto-peligro {
+  font-size: 14px;
+  padding: var(--espacio-8) var(--espacio-12);
+  border-radius: var(--radio-6);
+  background: transparent;
+  color: var(--color-peligro);
+}
+
+/* HU-09: filtros (componente "Filtros" de Figma) */
+.filtros {
+  display: flex;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-12);
+}
+
+.filtro {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+  padding: var(--espacio-8) var(--espacio-12);
+  border: 0;
+  border-radius: var(--radio-6);
+  background: transparent;
+  color: var(--color-texto-secundario);
+  cursor: pointer;
+}
+
+.filtro[aria-pressed="true"] {
+  background: var(--color-primario);
+  color: var(--color-sobre-primario);
+}
+
+.sin-resultados {
+  margin: 0;
+  padding-block: 32px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-texto-secundario);
+}
+
 /* Escritorio (HU-07, diseño "Escritorio" en Figma). Va al final para tener prioridad sobre las reglas de celular. */
 @media (min-width: 768px) {
   .app {
@@ -265,4 +319,7 @@ body {
   .boton-secundario:hover { background: var(--color-fondo); }
   .boton-icono:hover { background: var(--color-fondo); }
   .tarea-check:hover:not(:checked) { border-color: var(--color-primario); }
+  .filtro[aria-pressed="false"]:hover { background: var(--color-fondo); }
+  /* va sobre el fondo de la página: el hover usa superficie para que se note */
+  .boton-texto-peligro:hover { background: var(--color-superficie); }
 }

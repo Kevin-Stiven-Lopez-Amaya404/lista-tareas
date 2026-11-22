@@ -21,7 +21,18 @@
         <button type="submit" class="boton boton-primario">Agregar</button>
       </form>
 
+      <div id="barra-lista" class="barra-lista">
+        <div id="filtros" class="filtros" role="group" aria-label="Filtrar tareas">
+          <button type="button" class="filtro" data-filtro="todas" aria-pressed="true">Todas</button>
+          <button type="button" class="filtro" data-filtro="pendientes" aria-pressed="false">Pendientes</button>
+          <button type="button" class="filtro" data-filtro="completadas" aria-pressed="false">Completadas</button>
+        </div>
+        <button type="button" id="borrar-completadas" class="boton boton-texto-peligro" hidden></button>
+      </div>
+
       <ul id="lista-tareas" class="lista" aria-label="Tareas"></ul>
+
+      <p id="sin-resultados" class="sin-resultados" hidden></p>
 
       <div id="estado-vacio" class="estado-vacio">
         <p class="estado-vacio-titulo">Aún no tienes tareas</p>

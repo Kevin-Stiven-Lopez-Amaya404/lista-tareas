@@ -1,5 +1,66 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, resumen } from './tareas.js';
+import {
+  agregarTarea,
+  alternarCompletada,
+  borrarCompletadas,
+  editarTarea,
+  eliminarTarea,
+  filtrarTareas,
+  resumen,
+} from './tareas.js';
+
+describe('borrarCompletadas (HU-10)', () => {
+  const base = [
+    { id: 'a', texto: 'Uno', completada: true },
+    { id: 'b', texto: 'Dos', completada: false },
+    { id: 'c', texto: 'Tres', completada: true },
+    { id: 'd', texto: 'Cuatro', completada: false },
+  ];
+
+  it('quita todas las completadas y deja las pendientes en su orden', () => {
+    expect(borrarCompletadas(base).map((t) => t.id)).toEqual(['b', 'd']);
+  });
+
+  it('sin completadas devuelve las mismas tareas', () => {
+    const pendientes = borrarCompletadas(base);
+    expect(borrarCompletadas(pendientes)).toEqual(pendientes);
+  });
+
+  it('si todas estaban completadas queda vacía', () => {
+    expect(resumen(borrarCompletadas([base[0], base[2]]))).toBe('Sin tareas todavía');
+  });
+
+  it('no modifica la lista original', () => {
+    borrarCompletadas(base);
+    expect(base).toHaveLength(4);
+  });
+});
+
+describe('filtrarTareas (HU-09)', () => {
+  const base = [
+    { id: 'a', texto: 'Uno', completada: false },
+    { id: 'b', texto: 'Dos', completada: true },
+    { id: 'c', texto: 'Tres', completada: false },
+  ];
+  const ids = (lista) => lista.map((t) => t.id);
+
+  it('todas devuelve la lista completa en orden', () => {
+    expect(ids(filtrarTareas(base, 'todas'))).toEqual(['a', 'b', 'c']);
+  });
+
+  it('pendientes y completadas separan por estado manteniendo el orden', () => {
+    expect(ids(filtrarTareas(base, 'pendientes'))).toEqual(['a', 'c']);
+    expect(ids(filtrarTareas(base, 'completadas'))).toEqual(['b']);
+  });
+
+  it('un filtro desconocido no oculta tareas', () => {
+    expect(ids(filtrarTareas(base, 'otro'))).toEqual(['a', 'b', 'c']);
+  });
+
+  it('el resumen sigue contando todas las tareas', () => {
+    expect(resumen(base)).toBe('2 pendientes · 1 completada');
+  });
+});
 
 describe('eliminarTarea (HU-05)', () => {
   const base = [
