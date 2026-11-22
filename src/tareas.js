@@ -16,6 +16,10 @@ export function editarTarea(tareas, id, texto) {
   return tareas.map((t) => (t.id === id ? { ...t, texto: limpio } : t));
 }
 
+export function eliminarTarea(tareas, id) {
+  return tareas.filter((t) => t.id !== id);
+}
+
 const plural = (n, palabra) => `${n} ${palabra}${n === 1 ? '' : 's'}`;
 
 export function resumen(tareas) {

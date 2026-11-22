@@ -1,5 +1,27 @@
 import { describe, expect, it } from 'vitest';
-import { agregarTarea, alternarCompletada, editarTarea, resumen } from './tareas.js';
+import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, resumen } from './tareas.js';
+
+describe('eliminarTarea (HU-05)', () => {
+  const base = [
+    { id: 'a', texto: 'Uno', completada: false },
+    { id: 'b', texto: 'Dos', completada: true },
+    { id: 'c', texto: 'Tres', completada: false },
+  ];
+
+  it('quita solo la tarea indicada y mantiene el orden', () => {
+    expect(eliminarTarea(base, 'b').map((t) => t.id)).toEqual(['a', 'c']);
+  });
+
+  it('actualiza el resumen y llega al estado vacío', () => {
+    expect(resumen(eliminarTarea(base, 'b'))).toBe('2 pendientes · 0 completadas');
+    expect(resumen(eliminarTarea([base[0]], 'a'))).toBe('Sin tareas todavía');
+  });
+
+  it('no modifica la lista original', () => {
+    eliminarTarea(base, 'a');
+    expect(base).toHaveLength(3);
+  });
+});
 
 describe('editarTarea (HU-04)', () => {
   const base = [
