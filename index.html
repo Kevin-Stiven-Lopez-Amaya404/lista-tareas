@@ -4,10 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lista de Tareas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
   </head>
   <body>
-    <main id="app">
-      <h1>Lista de Tareas</h1>
+    <main class="app">
+      <header class="encabezado">
+        <h1>Mis tareas</h1>
+      </header>
+
+      <form id="form-tarea" class="nueva-tarea">
+        <label for="nueva-tarea" class="visualmente-oculto">Nueva tarea</label>
+        <input id="nueva-tarea" type="text" placeholder="Escribe una nueva tarea…" autocomplete="off" />
+        <button type="submit" class="boton boton-primario">Agregar</button>
+      </form>
+
+      <ul id="lista-tareas" class="lista" aria-label="Tareas"></ul>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>
