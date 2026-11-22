@@ -1,6 +1,7 @@
 import './estilos.css';
 import iconoEditar from './assets/icon-editar.svg';
-import { agregarTarea, alternarCompletada, editarTarea, resumen } from './tareas.js';
+import iconoEliminar from './assets/icon-eliminar.svg';
+import { agregarTarea, alternarCompletada, editarTarea, eliminarTarea, resumen } from './tareas.js';
 
 let tareas = [];
 let editandoId = null; // solo una tarea en edición a la vez
@@ -61,18 +62,25 @@ function crearItem(tarea) {
   casilla.checked = tarea.completada;
   etiqueta.append(casilla, crearElemento('span', 'tarea-texto', tarea.texto));
 
-  const editar = crearElemento('button', 'boton-icono tarea-editar');
-  editar.type = 'button';
-  editar.setAttribute('aria-label', `Editar tarea: ${tarea.texto}`);
+  li.append(
+    etiqueta,
+    crearBotonIcono('tarea-editar', iconoEditar, `Editar tarea: ${tarea.texto}`),
+    crearBotonIcono('tarea-eliminar', iconoEliminar, `Eliminar tarea: ${tarea.texto}`),
+  );
+  return li;
+}
+
+function crearBotonIcono(clase, src, etiqueta) {
+  const boton = crearElemento('button', `boton-icono ${clase}`);
+  boton.type = 'button';
+  boton.setAttribute('aria-label', etiqueta);
   const icono = crearElemento('img');
-  icono.src = iconoEditar;
+  icono.src = src;
   icono.alt = '';
   icono.width = 20;
   icono.height = 20;
-  editar.append(icono);
-
-  li.append(etiqueta, editar);
-  return li;
+  boton.append(icono);
+  return boton;
 }
 
 function render() {
@@ -112,8 +120,20 @@ lista.addEventListener('click', (evento) => {
     campo.select();
   } else if (evento.target.closest('.tarea-cancelar')) {
     terminarEdicion(item.dataset.id);
+  } else if (evento.target.closest('.tarea-eliminar')) {
+    eliminar(item.dataset.id);
   }
 });
+
+function eliminar(id) {
+  const posicion = tareas.findIndex((t) => t.id === id);
+  tareas = eliminarTarea(tareas, id);
+  render();
+  // el foco no se pierde: pasa a la tarea que ocupa su lugar, a la anterior o al campo de nueva tarea
+  const siguiente = tareas[posicion] ?? tareas[posicion - 1];
+  if (siguiente) enfocar(siguiente.id, '.tarea-eliminar');
+  else input.focus();
+}
 
 lista.addEventListener('input', (evento) => {
   if (!evento.target.matches('.tarea-edicion-campo')) return;
