@@ -1,7 +1,9 @@
 import './estilos.css';
-import { agregarTarea, alternarCompletada, resumen } from './tareas.js';
+import iconoEditar from './assets/icon-editar.svg';
+import { agregarTarea, alternarCompletada, editarTarea, resumen } from './tareas.js';
 
 let tareas = [];
+let editandoId = null; // solo una tarea en edición a la vez
 
 const form = document.querySelector('#form-tarea');
 const input = document.querySelector('#nueva-tarea');
@@ -14,33 +16,81 @@ function actualizarBoton() {
   boton.disabled = input.value.trim() === '';
 }
 
+function crearElemento(etiqueta, clase, texto) {
+  const el = document.createElement(etiqueta);
+  if (clase) el.className = clase;
+  if (texto) el.textContent = texto;
+  return el;
+}
+
+function crearFormEdicion(tarea) {
+  const formEdicion = crearElemento('form', 'tarea-edicion');
+
+  const campo = crearElemento('input', 'tarea-edicion-campo');
+  campo.type = 'text';
+  campo.value = tarea.texto;
+  campo.autocomplete = 'off';
+  campo.setAttribute('aria-label', 'Texto de la tarea');
+
+  const cancelar = crearElemento('button', 'boton boton-secundario tarea-cancelar', 'Cancelar');
+  cancelar.type = 'button';
+  const guardar = crearElemento('button', 'boton boton-primario', 'Guardar');
+  guardar.type = 'submit';
+
+  const acciones = crearElemento('div', 'tarea-edicion-acciones');
+  acciones.append(cancelar, guardar);
+  formEdicion.append(campo, acciones);
+  return formEdicion;
+}
+
+function crearItem(tarea) {
+  const li = crearElemento('li');
+  li.dataset.id = tarea.id;
+
+  if (tarea.id === editandoId) {
+    li.className = 'tarea editando';
+    li.append(crearFormEdicion(tarea));
+    return li;
+  }
+
+  li.className = tarea.completada ? 'tarea completada' : 'tarea';
+
+  const etiqueta = crearElemento('label', 'tarea-cuerpo');
+  const casilla = crearElemento('input', 'tarea-check');
+  casilla.type = 'checkbox';
+  casilla.checked = tarea.completada;
+  etiqueta.append(casilla, crearElemento('span', 'tarea-texto', tarea.texto));
+
+  const editar = crearElemento('button', 'boton-icono tarea-editar');
+  editar.type = 'button';
+  editar.setAttribute('aria-label', `Editar tarea: ${tarea.texto}`);
+  const icono = crearElemento('img');
+  icono.src = iconoEditar;
+  icono.alt = '';
+  icono.width = 20;
+  icono.height = 20;
+  editar.append(icono);
+
+  li.append(etiqueta, editar);
+  return li;
+}
+
 function render() {
   textoResumen.textContent = resumen(tareas);
   estadoVacio.hidden = tareas.length > 0;
   lista.hidden = tareas.length === 0;
-  lista.replaceChildren(
-    ...tareas.map((tarea) => {
-      const li = document.createElement('li');
-      li.className = tarea.completada ? 'tarea completada' : 'tarea';
-      li.dataset.id = tarea.id;
+  lista.replaceChildren(...tareas.map(crearItem));
+}
 
-      const etiqueta = document.createElement('label');
-      etiqueta.className = 'tarea-cuerpo';
+// render() recrea la lista: con esto el foco vuelve al mismo control para el uso con teclado
+function enfocar(id, selector) {
+  lista.querySelector(`[data-id="${id}"] ${selector}`)?.focus();
+}
 
-      const casilla = document.createElement('input');
-      casilla.type = 'checkbox';
-      casilla.className = 'tarea-check';
-      casilla.checked = tarea.completada;
-
-      const texto = document.createElement('span');
-      texto.className = 'tarea-texto';
-      texto.textContent = tarea.texto;
-
-      etiqueta.append(casilla, texto);
-      li.append(etiqueta);
-      return li;
-    }),
-  );
+function terminarEdicion(id) {
+  editandoId = null;
+  render();
+  enfocar(id, '.tarea-editar');
 }
 
 lista.addEventListener('change', (evento) => {
@@ -48,8 +98,39 @@ lista.addEventListener('change', (evento) => {
   const id = evento.target.closest('.tarea').dataset.id;
   tareas = alternarCompletada(tareas, id);
   render();
-  // render() recrea la lista: devolver el foco a la misma casilla para el uso con teclado
-  lista.querySelector(`[data-id="${id}"] .tarea-check`).focus();
+  enfocar(id, '.tarea-check');
+});
+
+lista.addEventListener('click', (evento) => {
+  const item = evento.target.closest('.tarea');
+  if (!item) return;
+  if (evento.target.closest('.tarea-editar')) {
+    editandoId = item.dataset.id;
+    render();
+    const campo = lista.querySelector('.tarea-edicion-campo');
+    campo.focus();
+    campo.select();
+  } else if (evento.target.closest('.tarea-cancelar')) {
+    terminarEdicion(item.dataset.id);
+  }
+});
+
+lista.addEventListener('input', (evento) => {
+  if (!evento.target.matches('.tarea-edicion-campo')) return;
+  evento.target.form.querySelector('[type="submit"]').disabled = evento.target.value.trim() === '';
+});
+
+lista.addEventListener('keydown', (evento) => {
+  if (evento.key === 'Escape' && evento.target.closest('.tarea-edicion')) {
+    terminarEdicion(evento.target.closest('.tarea').dataset.id);
+  }
+});
+
+lista.addEventListener('submit', (evento) => {
+  evento.preventDefault();
+  const id = evento.target.closest('.tarea').dataset.id;
+  tareas = editarTarea(tareas, id, evento.target.querySelector('.tarea-edicion-campo').value);
+  terminarEdicion(id);
 });
 
 input.addEventListener('input', actualizarBoton);

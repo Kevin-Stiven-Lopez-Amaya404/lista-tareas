@@ -10,6 +10,12 @@ export function alternarCompletada(tareas, id) {
   return tareas.map((t) => (t.id === id ? { ...t, completada: !t.completada } : t));
 }
 
+export function editarTarea(tareas, id, texto) {
+  const limpio = texto.trim();
+  if (!limpio) return tareas;
+  return tareas.map((t) => (t.id === id ? { ...t, texto: limpio } : t));
+}
+
 const plural = (n, palabra) => `${n} ${palabra}${n === 1 ? '' : 's'}`;
 
 export function resumen(tareas) {
