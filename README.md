@@ -1,5 +1,16 @@
 # Lista de Tareas
 
+App web con Vite + JavaScript. Pruebas con Vitest.
+
+```
+npm install      # primera vez
+npm run dev      # servidor local
+npm test         # pruebas
+npm run build    # build de producción (dist/)
+```
+
+El CI (GitHub Actions) corre pruebas y build en cada PR a `develop` y `main`.
+
 ## Flujo de trabajo
 
 - `main`: código estable, lo que se entrega. Nunca se sube código directo.
