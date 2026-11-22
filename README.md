@@ -2,7 +2,7 @@
 
 App web para anotar tareas: crearlas, marcarlas como completadas, editarlas y eliminarlas. Se guardan en el navegador, así que siguen ahí al volver. Funciona en celular y escritorio, con mouse y con teclado.
 
-**App publicada:** en Vercel (dirección pendiente de conectar el proyecto). Hasta entonces sigue la versión anterior en https://kevin-stiven-lopez-amaya404.github.io/lista-tareas/
+**App publicada (Vercel):** https://lista-tareas-sage.vercel.app/
 
 Versión actual: ver [Releases](https://github.com/Kevin-Stiven-Lopez-Amaya404/lista-tareas/releases) · [Historial de entregas](https://github.com/Kevin-Stiven-Lopez-Amaya404/docs-lista-tareas/blob/main/CHANGELOG.md) · [Diseño en Figma](https://www.figma.com/design/Gx9t5vMuidiEKMKpi1lfhV)
 
